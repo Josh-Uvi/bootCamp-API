@@ -1,8 +1,11 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
 const colors = require('colors');
+const fileupload = require('express-fileupload');
 const db = require('./config/db');
+const handleError = require('./middleware/error');
 
 //@desc   custom logger middleware
 // const logger = require('./middleware/logger');
@@ -17,6 +20,7 @@ db();
 
 //route files
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 
 //initalise app
 const app = express();
@@ -29,8 +33,18 @@ if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'));
 }
 
+//file uploading
+app.use(fileupload());
+
+//set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 //mount routes
 app.use('/api/v1/bootcamps', bootcamps);
+app.use('/api/v1/courses', courses);
+
+//error handler middleware
+app.use(handleError);
 
 //set port
 const Port = process.env.PORT || 5001;
