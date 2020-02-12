@@ -12,17 +12,18 @@ exports.protect = asyncHandler(async (req, res, next) => {
     req.headers.authorization &&
     req.headers.authorization.startsWith('Bearer')
   ) {
+    //Set token from Bearer token in header
     token = req.headers.authorization.split(' ')[1];
   }
 
   //check cookies
   // else if (req.cookies.token) {
-  //   token = req.cookies.token
+  //   token = req.cookies.token;
   // }
 
   //check token exists in headers
   if (!token) {
-    return next(new errorHandler('Not authorise to access this route', 401));
+    return next(new errorHandler('Not authorised to access this route', 401));
   }
 
   // verify token
@@ -32,7 +33,7 @@ exports.protect = asyncHandler(async (req, res, next) => {
     req.user = await User.findById(decoded.id);
     next();
   } catch (err) {
-    return next(new errorHandler('Not authorise to access this route', 401));
+    return next(new errorHandler('Not authorised to access this route', 401));
   }
 });
 
@@ -42,7 +43,7 @@ exports.authorize = (...roles) => {
     if (!roles.includes(req.user.role)) {
       return next(
         new errorHandler(
-          `User role ${req.user.role} is not authorise to access this route`,
+          `User role ${req.user.role} is not authorised to access this route`,
           403
         )
       );
