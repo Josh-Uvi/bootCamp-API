@@ -4,7 +4,7 @@ const colors = require('colors');
 const dotenv = require('dotenv');
 
 //load env vars
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: './config.env' });
 
 //load models
 const Bootcamp = require('./models/Bootcamp');
@@ -13,12 +13,15 @@ const User = require('./models/User');
 const Review = require('./models/Review');
 
 //connect to db
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-  useUnifiedTopology: true
-});
+mongoose.connect(
+  process.env.MONGO_URI || 'mongodb://localhost:27017/bootcamp-api',
+  {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+  }
+);
 
 //read json files
 const bootcamps = JSON.parse(

@@ -13,6 +13,7 @@ const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 const db = require('./config/db');
 const handleError = require('./middleware/error');
+const formidableMiddleware = require('express-formidable');
 
 //@desc   custom logger middleware
 // const logger = require('./middleware/logger');
@@ -20,7 +21,7 @@ const handleError = require('./middleware/error');
 // app.use(logger);
 
 //load env variables
-dotenv.config({ path: './config/config.env' });
+dotenv.config({ path: './config.env' });
 
 //connect to database
 db();
@@ -31,6 +32,7 @@ const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 const admin = require('./routes/admin');
 const reviews = require('./routes/reviews');
+const admins = require('./routes/admins');
 
 //initalise app
 const app = express();
@@ -61,7 +63,7 @@ app.use(xss());
 // Rate limiting
 const limiter = ratelimit({
   windowMs: 10 * 60 * 1000, // 10 mins
-  max: 10
+  max: 100
 });
 app.use(limiter);
 
@@ -70,6 +72,9 @@ app.use(hpp());
 
 // Enable CORS
 app.use(cors());
+
+// Use the formidable Middleware
+app.use(formidableMiddleware());
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')));
@@ -80,6 +85,7 @@ app.use('/api/v1/courses', courses);
 app.use('/api/v1/auth', auth);
 app.use('/api/v1/admin', admin);
 app.use('/api/v1/reviews', reviews);
+app.use('/admin', admins);
 
 //error handler middleware
 app.use(handleError);

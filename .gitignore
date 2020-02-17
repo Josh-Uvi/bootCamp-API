@@ -1,6 +1,4 @@
 node_modules
-config/config.env
+config.env
 package-lock.json
 .vscode
-.dockerignore
-docker-compose.yml

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  web:
+    container_name: bootcamp-api
+    restart: always
+    build: .
+    command: 'npm start'
+    env_file:
+      - ./config.env
+    ports:
+      - '5000:5000'
+    depends_on:
+      - 'mongo'
+  mongo:
+    container_name: mongo
+    image: 'mongo'
+    ports:
+      - '27017:27017'

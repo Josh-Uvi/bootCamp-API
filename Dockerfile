@@ -1,15 +1,15 @@
 FROM node:10
 
-ENV NODE_ENV=production
-
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package.json .
 
-RUN npm install --only=production && npm cache clean --force
+RUN npm install
 
 COPY . .
 
 EXPOSE 5000
+
+#ENV MONGO_URI=mongodb://localhost/bootcamp-api
 
 CMD [ "npm", "start" ]
